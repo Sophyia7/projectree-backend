@@ -28,7 +28,7 @@ class Register(GenericAPIView):
         if num_results > 0:
             return Response(
                 {
-                    "success" False,
+                    "success": False,
                     "detail": "User already exists",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -65,7 +65,7 @@ class Register(GenericAPIView):
             )
         return Response(
             {
-                "success" False,
+                "success": False,
                 "detail": "User already exists",
             },
             status=status.HTTP_400_BAD_REQUEST,
@@ -168,7 +168,7 @@ class ResendActivationLink(GenericAPIView):
 
         return Response(
             {
-                "success" True,
+                "success": True,
                 "detail": "Email sent", "data": message
             },
             status=status.HTTP_200_OK,

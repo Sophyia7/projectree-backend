@@ -26,7 +26,7 @@ schema_view = get_schema_view(
       description="This is the docs for a Projectree API built using DRF and Django",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="iroegbusophia3@gmail.com"),
-      license=openapi.License(name="BSD License"),
+      license=openapi.License(name="MIT License"),
    ),
    public=True,
    permission_classes=[permissions.AllowAny],

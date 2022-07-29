@@ -104,7 +104,7 @@ class UpdateProjectree(GenericAPIView):
               return Response(
                 {
                   "success": False,
-                  "error": "Project item doesn't exist"
+                  "detail": "Project item doesn't exist"
                 },
                 status=status.HTTP_400_BAD_REQUEST
               )
@@ -134,7 +134,7 @@ class UpdateProjectree(GenericAPIView):
       return Response(
         {
           "success": False,
-          "message": str(e)
+          "detail": str(e)
         },
         status=status.HTTP_404_NOT_FOUND
       )

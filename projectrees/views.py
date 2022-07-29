@@ -24,7 +24,8 @@ class ProjectreeView(GenericAPIView):
       if Projectree.objects.filter(projectree_name=name).exists():
         return Response(
           {
-            "message": str(name) + " is already in use. Choose another name for your projectree"
+            "success": False,
+            "detail": str(name) + " is already in use. Choose another name for your projectree"
           },
           status=status.HTTP_400_BAD_REQUEST
         )
@@ -32,7 +33,8 @@ class ProjectreeView(GenericAPIView):
         serializer.save()
         return Response(
           {
-            "message": "Projectree saved successfully",
+            "success": True,
+            "detail": "Projectree saved successfully",
             "data": serializer.data
           },
           status=status.HTTP_200_OK
@@ -40,7 +42,8 @@ class ProjectreeView(GenericAPIView):
     else:
       return Response(
         {
-          "message": "Error occured",
+          "success": False,
+          "detail": "Error occured",
           "data": serializer.errors
         },
         status=status.HTTP_400_BAD_REQUEST
@@ -60,7 +63,8 @@ class ProjectItemView(GenericAPIView):
 
       return Response(
         {
-          "message": "Project saved successfully",
+          "success": True,
+          "detail": "Project saved successfully",
           "data": serializer.data
         },
         status=status.HTTP_200_OK
@@ -68,7 +72,8 @@ class ProjectItemView(GenericAPIView):
     else: 
       return Response(
         {
-          "message": "Project not saved successfully",
+          "success": False,
+          "detail": "Project not saved successfully",
           "data": serializer.errors
         },
         status=status.HTTP_400_BAD_REQUEST
@@ -98,6 +103,7 @@ class UpdateProjectree(GenericAPIView):
             else:
               return Response(
                 {
+                  "success": False,
                   "error": "Project item doesn't exist"
                 },
                 status=status.HTTP_400_BAD_REQUEST
@@ -108,7 +114,8 @@ class UpdateProjectree(GenericAPIView):
           serializer.save()
           return Response(
             {
-              "message": "Projectree updated successfully",
+              "success": True,
+              "detail": "Projectree updated successfully",
               "data": serializer.data
             },
             status=status.HTTP_200_OK
@@ -116,7 +123,8 @@ class UpdateProjectree(GenericAPIView):
         else:
           return Response(
             {
-              "message": "Projectree not updated successfully",
+              "success": False,
+              "detail": "Projectree not updated successfully",
               "data": serializer.errors
             },
             status=status.HTTP_400_BAD_REQUEST
@@ -125,6 +133,7 @@ class UpdateProjectree(GenericAPIView):
       print(e)
       return Response(
         {
+          "success": False,
           "message": str(e)
         },
         status=status.HTTP_404_NOT_FOUND
@@ -147,7 +156,8 @@ class UpdateProject(GenericAPIView):
           serializer.save()
           return Response(
             {
-              "message": "Project updated successfully",
+              "success": True,
+              "detail": "Project updated successfully",
               "data": serializer.data
             },
             status=status.HTTP_200_OK
@@ -155,7 +165,8 @@ class UpdateProject(GenericAPIView):
         else:
           return Response(
             {
-              "message": "Project not updated successfully",
+              "success": False,
+              "detail": "Project not updated successfully",
               "data": serializer.errors
             },
             status=status.HTTP_400_BAD_REQUEST
@@ -164,7 +175,8 @@ class UpdateProject(GenericAPIView):
       print(e)
       return Response(
         {
-          "message": str(e)
+          "success": False,
+          "detail": str(e)
         },
         status=status.HTTP_404_NOT_FOUND
       )
@@ -185,7 +197,8 @@ class GetUserProjectree(GenericAPIView):
 
     return Response(
       {
-        "message": "Projectree retrieved successfully",
+        "success": True,
+        "detail": "Projectree retrieved successfully",
         "data": serializer.data
       },
       status=status.HTTP_200_OK
@@ -206,7 +219,8 @@ class GetUserProjectreeById(GenericAPIView):
     if Projectree.objects.filter(user=user, id=projectree_id).count() > 0:
       return Response(
         {
-          "message": "Projectree retrieved successfully",
+          "success": True,
+          "detail": "Projectree retrieved successfully",
           "data": serializer.data
         },
         status=status.HTTP_200_OK
@@ -214,7 +228,8 @@ class GetUserProjectreeById(GenericAPIView):
     else:
       return Response(
         {
-          "message": "Projectree does not exist"
+          "success": False,
+          "detail": "Projectree does not exist"
         },
         status=status.HTTP_400_BAD_REQUEST
       )
@@ -235,14 +250,16 @@ class DeleteUserProjectreeById(GenericAPIView):
       projectree.delete()
       return Response(
         {
-          "message": "Projectree deleted successfully"
+          "success": True,
+          "detail": "Projectree deleted successfully"
         },
         status=status.HTTP_200_OK
       )
     else:
       return Response(
         {
-          "message": "Projectree does not exist"
+          "success": False,
+          "detail": "Projectree does not exist"
         },
         status=status.HTTP_400_BAD_REQUEST
       )
@@ -267,7 +284,8 @@ class PublishProjects(GenericAPIView):
         serializer.save()
         return Response(
           {
-            "message": "Projectree published successfully",
+            "success": True,
+            "detail": "Projectree published successfully",
             "data": serializer.data
           },
           status=status.HTTP_200_OK
@@ -275,14 +293,16 @@ class PublishProjects(GenericAPIView):
       else:
         return Response(
           {
-            "message": "Projectree does not exist"
+            "success": False,
+            "detail": "Projectree does not exist"
           },
           status=status.HTTP_400_BAD_REQUEST
         )
     else:
       return Response(
         {
-          "message": "Projectree not published successfully",
+          "success": False,
+          "detail": "Projectree not published successfully",
           "data": serializer.errors
         },
         status=status.HTTP_400_BAD_REQUEST
@@ -303,7 +323,8 @@ class ViewPublish(GenericAPIView):
     if PublishedProjects.objects.filter(user=user, name=publish_name).exists():
       return Response(
         {
-          "message": "Projectree retrieved successfully",
+          "sucsess": True,
+          "detail": "Projectree retrieved successfully",
           "data": serializer.data
         },
         status=status.HTTP_200_OK
@@ -311,7 +332,8 @@ class ViewPublish(GenericAPIView):
     else:
       return Response(
         {
-          "message": "Projectree does not exist"
+          "success": False,
+          "detail": "Projectree does not exist"
         },
         status=status.HTTP_400_BAD_REQUEST
       )
@@ -331,14 +353,16 @@ class DeleteProject(GenericAPIView):
       project.delete()
       return Response(
         {
-          "message": "Project deleted successfully"
+          "success": True,
+          "detail": "Project deleted successfully"
         },
         status=status.HTTP_200_OK
       )
     else:
       return Response(
         {
-          "message": "Project does not exist"
+          "success": False,
+          "detail": "Project does not exist"
         },
         status=status.HTTP_400_BAD_REQUEST
       )

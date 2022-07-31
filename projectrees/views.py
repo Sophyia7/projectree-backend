@@ -337,7 +337,6 @@ class PublishProjects(GenericAPIView):
 
 class ViewPublish(GenericAPIView):
   serializer_class = PublishedSerializer
-  permission_classes = [IsAuthenticated]
 
   def get(self, request, publish_name):
     user = get_object_or_404(User, pk=request.user.id)

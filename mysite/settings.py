@@ -188,6 +188,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000", 
     "https://backend-projectree.herokuapp.com",
     "https://projectree.net",
+    "https://www.projectree.net",
+    "https://projectree.netlify.app"
 ]
 
 CORS_ALLOW_METHODS = [ 

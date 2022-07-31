@@ -244,7 +244,6 @@ class GetUserProjectreeById(GenericAPIView):
 
 # This API is used to delete a user projectree by ID
 
-
 class DeleteUserProjectreeById(GenericAPIView):
   serializer_class = ProjectreeSerailizer
   permission_classes = [IsAuthenticated]
@@ -254,7 +253,15 @@ class DeleteUserProjectreeById(GenericAPIView):
     projectree = Projectree.objects.filter(user=user, id=projectree_id)
 
     if projectree.exists():
+      projects = ProjectItem.objects.filter(user=user, projects=projectree_id)
+
+      # delete them in loop
+      for project in projects: 
+        if ProjectItem.objects.filter(id=project.id).exists():
+          project.delete()
+
       projectree.delete()
+
       return Response(
         {
           "success": True,
@@ -270,6 +277,7 @@ class DeleteUserProjectreeById(GenericAPIView):
         },
         status=status.HTTP_400_BAD_REQUEST
       )
+
 
 
 
@@ -293,7 +301,7 @@ class PublishProjects(GenericAPIView):
           return Response(
             {
               "success": False,
-              "detail": "Published projectree already exists"
+              "detail": "A projectree already exists with this name"
             },
             status=status.HTTP_400_BAD_REQUEST
           )
@@ -301,7 +309,7 @@ class PublishProjects(GenericAPIView):
           return Response(
             {
               "success": False,
-              "detail": "Published projectree already exists"
+              "detail": "This projectree has already been published"
             },
             status=status.HTTP_400_BAD_REQUEST
           )
@@ -339,15 +347,13 @@ class ViewPublish(GenericAPIView):
   serializer_class = PublishedSerializer
 
   def get(self, request, publish_name):
-    user = get_object_or_404(User, pk=request.user.id)
-    publish = PublishedProjects.objects.filter(user=user, name=publish_name).first()
-    serializer = self.serializer_class(instance=publish)
-
-    if PublishedProjects.objects.filter(user=user, name=publish_name).exists():
+    if PublishedProjects.objects.filter(name=publish_name).exists():
+      publish = PublishedProjects.objects.filter(name=publish_name).first()
+      serializer = self.serializer_class(instance=publish)
       return Response(
         {
-          "sucsess": True,
-          "detail": "Projectree retrieved successfully",
+          "success": True,
+          "detail": "Published projectree retrieved successfully",
           "data": serializer.data
         },
         status=status.HTTP_200_OK
@@ -356,11 +362,10 @@ class ViewPublish(GenericAPIView):
       return Response(
         {
           "success": False,
-          "detail": "Projectree does not exist"
+          "detail": "Published projectree does not exist"
         },
         status=status.HTTP_400_BAD_REQUEST
       )
-
 
 # This API is used to delete a project by ID
 

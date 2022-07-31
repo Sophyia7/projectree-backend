@@ -1,5 +1,3 @@
-from tabnanny import check
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from accounts.serializers import (
@@ -17,6 +15,8 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_str, force_bytes
 from django.contrib.auth import logout
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
@@ -301,12 +301,19 @@ class ConfirmPassword(GenericAPIView):
 
 
 class Logout(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
     def get(self, request):
+        request.user.access_token.delete()
         logout(request)
 
         return Response(
             {
                 "success": True,
-                "detail": "Logout Successful"},
+                "detail": "Logged out successfully"
+            },
             status=status.HTTP_200_OK,
         )
+
+

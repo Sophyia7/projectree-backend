@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from projectrees.serializers import (
-  ProjectSerializer, ProjectreeSerailizer, PublishedSerializer
+  ProjectSerializer, ProjectreeSerailizer, PublishedSerializer,
+  ViewPublishSerializer
   )
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
@@ -344,7 +345,7 @@ class PublishProjects(GenericAPIView):
 # This API is used to view an published projectree by ID
 
 class ViewPublish(GenericAPIView):
-  serializer_class = PublishedSerializer
+  serializer_class = ViewPublishSerializer
 
   def get(self, request, publish_name):
     if PublishedProjects.objects.filter(name=publish_name).exists():

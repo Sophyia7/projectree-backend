@@ -26,7 +26,7 @@ class PublishedSerializer(serializers.ModelSerializer):
   class Meta:
     model = PublishedProjects
     fields = (
-       'name',  
+       'name', 
     )
 
   def create(self, validated_data):
@@ -34,3 +34,13 @@ class PublishedSerializer(serializers.ModelSerializer):
     p_project = PublishedProjects.objects.create(name=validated_data['name'], projectree=validated_data['projectree'], user=validated_data['user'])
     p_project.save()
     return validated_data
+
+
+class ViewPublishSerializer(serializers.ModelSerializer):
+  projectree = ProjectreeSerailizer(read_only=True)
+
+  class Meta:
+    model = PublishedProjects
+    fields = (
+      'name', 'projectree', 'created_at',
+    )

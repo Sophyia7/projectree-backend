@@ -6,7 +6,7 @@ class ProjectSerializer(serializers.ModelSerializer):
   class Meta:
     model = ProjectItem
     fields = (
-      'id', 'user', 'name', 'description', 'image', 'programming_language', 
+      'id', 'name', 'description', 'image', 'programming_language', 
       'source_code', 'demo_link', 'created_at'
       )
 
@@ -16,7 +16,7 @@ class ProjectreeSerailizer(serializers.ModelSerializer):
   class Meta:
     model = Projectree
     fields = (
-      'id', 'user', 'projectree_name', 'title', 'favicon', 
+      'id', 'projectree_name', 'title', 'favicon', 
       'theme', 'project_items', 'created_at', 'updated_at',
     )
 
@@ -26,7 +26,7 @@ class PublishedSerializer(serializers.ModelSerializer):
   class Meta:
     model = PublishedProjects
     fields = (
-       'name', 'projectree', 'user'
+       'name',  
     )
 
   def create(self, validated_data):

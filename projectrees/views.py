@@ -21,26 +21,16 @@ class ProjectreeView(GenericAPIView):
   def post(self, request):
     serializer = self.serializer_class(data=request.data)
 
-    if serializer.is_valid():
-      name = serializer.validated_data.get("projectree_name")
-      if Projectree.objects.filter(projectree_name=name).exists():
-        return Response(
-          {
-            "success": False,
-            "detail": str(name) + " is already in use. Choose another name for your projectree"
-          },
-          status=status.HTTP_400_BAD_REQUEST
-        )
-      else: 
-        serializer.save()
-        return Response(
-          {
-            "success": True,
-            "detail": "Projectree saved successfully",
-            "data": serializer.data
-          },
-          status=status.HTTP_200_OK
-        )
+    if serializer.is_valid(): 
+      serializer.save(user=request.user)
+      return Response(
+        {
+          "success": True,
+          "detail": "Projectree saved successfully",
+          "data": serializer.data
+        },
+        status=status.HTTP_200_OK
+      )
     else:
       return Response(
         {
@@ -61,7 +51,7 @@ class ProjectItemView(GenericAPIView):
     serializer = self.serializer_class(data=request.data)
 
     if serializer.is_valid():
-      serializer.save()
+      serializer.save(user=request.user)
 
       return Response(
         {
@@ -87,7 +77,6 @@ class ProjectItemView(GenericAPIView):
 class UpdateProjectree(GenericAPIView):
   serializer_class = ProjectreeSerailizer
   permission_classes = [IsAuthenticated]
-  # authentication_classes = [JWTAuthentication]
 
   def put(self, request, projectree_id):
     try:
@@ -299,7 +288,24 @@ class PublishProjects(GenericAPIView):
 
     if serializer.is_valid():
       if Projectree.objects.filter(id=projectree_id).exists():
-        serializer.save()
+        name = serializer.validated_data.get("name")
+        if PublishedProjects.objects.filter(name=name).exists():
+          return Response(
+            {
+              "success": False,
+              "detail": "Published projectree already exists"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+          )
+        if PublishedProjects.objects.filter(projectree=projectree).exists():
+          return Response(
+            {
+              "success": False,
+              "detail": "Published projectree already exists"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+          )
+        serializer.save(user=request.user, projectree=projectree)
         return Response(
           {
             "success": True,

@@ -1,3 +1,4 @@
+from tokenize import Token
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
@@ -8,7 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
 from rest_framework import status
 from projectrees.models import ProjectItem, Projectree, PublishedProjects
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # This API is used to create a new projectree
 
@@ -85,6 +87,7 @@ class ProjectItemView(GenericAPIView):
 class UpdateProjectree(GenericAPIView):
   serializer_class = ProjectreeSerailizer
   permission_classes = [IsAuthenticated]
+  # authentication_classes = [JWTAuthentication]
 
   def put(self, request, projectree_id):
     try:
@@ -108,8 +111,6 @@ class UpdateProjectree(GenericAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST
               )
-    
-    
 
           serializer.save()
           return Response(
@@ -129,6 +130,14 @@ class UpdateProjectree(GenericAPIView):
             },
             status=status.HTTP_400_BAD_REQUEST
           )
+      else:
+        return Response(
+          {
+            "success": False,
+            "detail": "You are not authorized to update this projectree"
+          },
+          status=status.HTTP_400_BAD_REQUEST
+        )
     except Exception as e:
       print(e)
       return Response(
@@ -149,6 +158,7 @@ class UpdateProject(GenericAPIView):
     try:
       user = get_object_or_404(User, pk=request.user.id)
       project = get_object_or_404(ProjectItem, pk=project_id)
+
       if user.id == project.user.id:
         serializer = self.serializer_class(project, data=request.data)
 
@@ -171,6 +181,14 @@ class UpdateProject(GenericAPIView):
             },
             status=status.HTTP_400_BAD_REQUEST
           )
+      else:
+        return Response(
+          {
+            "success": False,
+            "detail": "You are not authorized to update this project"
+          },
+          status=status.HTTP_400_BAD_REQUEST
+        )
     except Exception as e:
       print(e)
       return Response(

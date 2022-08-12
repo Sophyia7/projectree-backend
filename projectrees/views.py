@@ -260,6 +260,11 @@ class DeleteUserProjectreeById(GenericAPIView):
       for project in projects: 
         if ProjectItem.objects.filter(id=project.id).exists():
           project.delete()
+        
+      # If projectree is published delete it
+      if PublishedProjects.objects.filter(projectree=projectree_id).exists():
+        published_project = PublishedProjects.objects.get(projectree=projectree_id)
+        published_project.delete()
 
       projectree.delete()
 
